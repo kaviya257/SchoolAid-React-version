@@ -1,45 +1,53 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 const withLoading = (Wrapped) => {
   return function WithLoading({ loading, ...props }) {
-    if (loading) return <p style={{ textAlign: "center", color: "blue" }}>Loading...</p>;
+    if (loading)
+      return (
+        <p style={{ textAlign: "center", color: "blue" }}>Loading...</p>
+      );
     return <Wrapped {...props} />;
   };
 };
+
 function Header() {
   return (
     <header style={{ textAlign: "center", padding: "20px" }}>
       <h1 style={{ color: "whitesmoke" }}>School Aid Management</h1>
-      <marquee
-        behavior="scroll"
-        direction="left"
-        scrollAmount="15"
-        style={{ color: "white", fontWeight: "bold" }}
-      >
-        SchoolAid Management System connects seekers with helpers, enabling students to get academic support and share resources.
-      </marquee>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `<marquee behavior="scroll" direction="left" scrollAmount="15" style="color:white; font-weight:bold;">
+            SchoolAid Management System connects seekers with helpers, enabling students to get academic support and share resources.
+          </marquee>`,
+        }}
+      />
     </header>
   );
 }
+
 function LoginForm({ onLogin }) {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const inputRef = useRef(null);
+
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-try {
+    try {
       await axios.post("https://jsonplaceholder.typicode.com/posts", form); // fake API
       if (form.username === "admin" && form.password === "admin") {
-        onLogin(); 
+        onLogin();
       } else {
         setError("Invalid credentials. Try 'admin' / 'admin'.");
       }
@@ -47,12 +55,14 @@ try {
       setError("Server error, please try again later.");
     }
   };
-const handleRefresh = () => {
+
+  const handleRefresh = () => {
     setForm({ username: "", password: "" });
     setError("");
     inputRef.current.focus();
   };
-return (
+
+  return (
     <div
       style={{
         margin: "auto",
@@ -104,12 +114,18 @@ return (
             )}
             <tr>
               <td>
-                <button onClick={handleRefresh} type="button" style={{ padding: "5px 10px" }}>
+                <button
+                  onClick={handleRefresh}
+                  type="button"
+                  style={{ padding: "5px 10px" }}
+                >
                   Refresh
                 </button>
               </td>
               <td>
-                <button type="submit" style={{ padding: "5px 10px" }}>Login</button>
+                <button type="submit" style={{ padding: "5px 10px" }}>
+                  Login
+                </button>
               </td>
             </tr>
           </tbody>
@@ -118,7 +134,9 @@ return (
     </div>
   );
 }
+
 const LoginFormWithLoading = withLoading(LoginForm);
+
 function Footer() {
   return (
     <footer style={{ textAlign: "center", marginTop: "50px", color: "white" }}>
@@ -126,18 +144,21 @@ function Footer() {
     </footer>
   );
 }
+
 export default function Login({ onSuccess }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleLogin = () => {
     setLoading(true);
     setTimeout(() => {
-      onSuccess(); 
-      navigate("/welcome"); 
+      onSuccess();
+      navigate("/welcome");
       setLoading(false);
-    }, 500); 
+    }, 500);
   };
-return (
+
+  return (
     <div
       style={{
         minHeight: "100vh",
